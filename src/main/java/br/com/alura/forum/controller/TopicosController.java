@@ -8,9 +8,9 @@ import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,7 +30,7 @@ import br.com.alura.forum.controller.form.TopicoForm;
 import br.com.alura.forum.modelo.Topico;
 import br.com.alura.forum.repository.CursoRepository;
 import br.com.alura.forum.repository.TopicoRepository;
-
+//consulta Postman localhost:8080/topicos?page=0&size=10&sort=id,asc&sort=dataCriacao,desc
 @RestController
 @RequestMapping("/topicos")
 public class TopicosController {
@@ -43,9 +43,8 @@ public class TopicosController {
 
 	@GetMapping
 	public Page<TopicoDto> lista(@RequestParam(required = false) String nomeCurso,
-			@RequestParam int pagina, @RequestParam int qtd, @RequestParam String ordenacao) {
+			@PageableDefault(sort = "id", direction = Direction.DESC, page = 0, size = 10)Pageable paginacao) {
 		
-		Pageable paginacao = PageRequest.of(pagina, qtd, Direction.ASC, ordenacao);
 		
 		if (nomeCurso == null) {
 			Page<Topico> topicos = topicoRepository.findAll(paginacao);
